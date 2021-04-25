@@ -20,6 +20,10 @@ IntList::~IntList() {
 
 // return sum of values in list
 int IntList::sum() const {
+    // checks if list is empty
+    if ( !this->first ){
+        return 0;
+    }
 
     int sum = 0;
     Node *temp;
@@ -36,23 +40,81 @@ int IntList::sum() const {
 
 // returns true if value is in the list; false if not
 bool IntList::contains(int value) const {
+    // checks if list is empty
+    if ( !this->first ){
+        return false;
+    }
+
+    Node *temp;
+    temp = this->first;
+
+    while ( temp ){
+        if ( temp->info == value ){
+            return true;
+        }
+        temp = temp->next;
+    }
+    temp = nullptr;
+
     return false; // REPLACE THIS NON-SOLUTION
 }
 
 // returns maximum value in list, or 0 if empty list
 int IntList::max() const {
-    return 0; // REPLACE THIS NON-SOLUTION
+    // checks if list is empty
+    if ( !this->first ){
+        return 0;
+    }
+
+    int max = this->first->info;
+    Node *temp;
+    temp = this->first;
+
+    while ( temp ){
+        if ( temp->info > max ){
+            max = temp->info;
+        }
+        temp = temp->next;
+    }
+    temp = nullptr;
+
+    return max; // REPLACE THIS NON-SOLUTION
 }
 
 // returns average (arithmetic mean) of all values, or
 // 0 if list is empty
 double IntList::average() const {
-    return 0.0; // REPLACE THIS NON-SOLUTION
+    // checks if list is empty
+    if ( !this->first ){
+        return 0.0;
+    }
+
+    double avg = 0.0;
+    Node *temp;
+    temp = this->first;
+
+    while ( temp ){
+        avg += temp->info;
+        temp = temp->next;
+    }
+    avg /= this->count();
+
+    return avg; // REPLACE THIS NON-SOLUTION
 }
 
 // inserts value as new node at beginning of list
 void IntList::insertFirst(int value) {
-    // IMPLEMENT
+    if ( !this->first ){ // list empty, insert node as head
+        first = new Node;
+        first->info = value;
+    }
+    else{
+        Node *temp = new Node;
+        temp->info = this->first->info;
+        this->first->info = value;
+        temp->next = this->first->next;
+        this->first->next = temp;
+    }
 }
 
 //Assignment operator should copy the list from the source
