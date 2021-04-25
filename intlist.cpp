@@ -9,12 +9,32 @@ using std::cout;
 
 // copy constructor
 IntList::IntList(const IntList& source) {
-    //IMPLEMENT THIS
+    if ( !source.first ){ // source list is empty
+        // list is already empty, set first to null
+        this->first = nullptr;
+        this->first->info = 0;
+        this->first->next = nullptr;
+    }
+    else{ // list needs to be copied, node by node
+        Node *j = source.first; // using j as placeholder for source list
+        this->first = nullptr;
+        while ( j ){
+            int info = j->info;
+            this->append(info);
+            j = j->next;
+        }
+    }
 }
 
 // destructor deletes all nodes
 IntList::~IntList() {
-    //IMPLEMENT THIS
+    Node *n = this->first;
+    while ( n ){
+        Node *deleteThisNode = n;
+        n = n->next;
+        delete deleteThisNode;
+    }
+    n = nullptr;
 }
 
 
@@ -26,16 +46,16 @@ int IntList::sum() const {
     }
 
     int sum = 0;
-    Node *temp;
-    temp = this->first;
+    Node *n;
+    n = this->first;
 
-    while ( temp ){
-        sum += temp->info;
-        temp = temp->next;
+    while ( n ){
+        sum += n->info;
+        n = n->next;
     }
-    temp = nullptr;
+    n = nullptr;
 
-    return sum; // REPLACE THIS NON-SOLUTION
+    return sum;
 }
 
 // returns true if value is in the list; false if not
@@ -45,18 +65,18 @@ bool IntList::contains(int value) const {
         return false;
     }
 
-    Node *temp;
-    temp = this->first;
+    Node *n;
+    n = this->first;
 
-    while ( temp ){
-        if ( temp->info == value ){
+    while ( n ){
+        if ( n->info == value ){
             return true;
         }
-        temp = temp->next;
+        n = n->next;
     }
-    temp = nullptr;
+    n = nullptr;
 
-    return false; // REPLACE THIS NON-SOLUTION
+    return false;
 }
 
 // returns maximum value in list, or 0 if empty list
@@ -67,18 +87,18 @@ int IntList::max() const {
     }
 
     int max = this->first->info;
-    Node *temp;
-    temp = this->first;
+    Node *n;
+    n = this->first;
 
-    while ( temp ){
-        if ( temp->info > max ){
-            max = temp->info;
+    while ( n ){
+        if ( n->info > max ){
+            max = n->info;
         }
-        temp = temp->next;
+        n = n->next;
     }
-    temp = nullptr;
+    n = nullptr;
 
-    return max; // REPLACE THIS NON-SOLUTION
+    return max;
 }
 
 // returns average (arithmetic mean) of all values, or
@@ -90,37 +110,65 @@ double IntList::average() const {
     }
 
     double avg = 0.0;
-    Node *temp;
-    temp = this->first;
+    Node *n;
+    n = this->first;
 
-    while ( temp ){
-        avg += temp->info;
-        temp = temp->next;
+    while ( n ){
+        avg += n->info;
+        n = n->next;
     }
+    n = nullptr;
+
     avg /= this->count();
 
-    return avg; // REPLACE THIS NON-SOLUTION
+    return avg;
 }
 
 // inserts value as new node at beginning of list
 void IntList::insertFirst(int value) {
     if ( !this->first ){ // list empty, insert node as head
-        first = new Node;
-        first->info = value;
+        this->first = new Node;
+        this->first->info = value;
+        this->first->next = nullptr;
     }
     else{
-        Node *temp = new Node;
-        temp->info = this->first->info;
+        Node *n = new Node;
+        n->info = this->first->info;
         this->first->info = value;
-        temp->next = this->first->next;
-        this->first->next = temp;
+        n->next = this->first->next;
+        this->first->next = n;
     }
 }
 
 //Assignment operator should copy the list from the source
 //to this list, deleting/replacing any existing nodes
 IntList& IntList::operator=(const IntList& source){
-    //IMPLEMENT
+    // this and source are the same
+    if ( this == &source ){
+        return *this;
+    }
+    // check if this list is not empty, delete its nodes
+    if ( this->first ){
+        Node *n = this->first;
+        while ( n ){
+            Node *deleteThisNode = n;
+            n = n->next;
+            delete deleteThisNode;
+        }
+        this->first = nullptr;
+        n = nullptr;
+    }
+    // check if source is empty, if so, return empty list
+    if ( !source.first ){
+        return *this;
+    }
+    // this list is empty, copy source to it, node by node
+    Node *j = source.first; // using j as placeholder for source list
+    while ( j ){
+        int info = j->info;
+        this->append(info);
+        j = j->next;
+    }
     return *this;
 }
 
